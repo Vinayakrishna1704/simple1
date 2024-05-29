@@ -1,0 +1,96 @@
+﻿@model List<Route>
+@{
+    ViewData["Title"] = "Admin - Routes";
+}
+
+<ul class="nav justify-content-start">
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Admin" asp-action="Approval">Approve Requests</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Admin" asp-action="AssignDriver">Assign Driver</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Admin" asp-action="Vehicles">Vehicles</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Admin" asp-action="Routes">Routes</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Admin" asp-action="Report">Report</a>
+    </li>
+</ul>
+
+<div class="text-center">
+    <h1 class="display-4">Manage Routes</h1>
+</div>
+
+<table class="table table-bordered table-striped">
+    <tr>
+        <td>Route ID</td>
+        <td>Route Name</td>
+        <td>Edit/Delete Route</td>
+    </tr>
+    @foreach (var route in Model) {
+        <tr>
+            <td>@route.RouteId</td>
+            <td>@route.RouteName</td>
+            <td>
+                <button class="btn btn-primary" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#editModal" 
+                        onclick="openModal('@route.RouteId', '@route.RouteName')">Edit</button>
+                <a class="btn btn-danger" asp-controller="Admin" asp-action="DeleteRoute" asp-route-id=@route.RouteId>Delete</a>
+            </td>
+        </tr>
+    }
+</table>
+
+<form class="row g-2" method="post" asp-controller="Admin" asp-action="Routes">
+    <div class="col-auto">
+        <input type="text" class="form-control" name="route" placeholder="Route Name">
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary mb-3">Add Route</button>
+    </div>
+</form>
+
+<div id="editModal" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Route</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-controller="Admin" asp-action="UpdateRoute" method="get">
+                    <div class="visually-hidden">
+                        <input type="number" id="routeId" name="routeId" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="oldRoute">Old route name</label>
+                        <input type="text" id="oldRoute" class="form-control" value="Old route" disabled />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="newRoute">New route name</label>
+                        <input type="text" id="newRoute" name="newRoute" class="form-control" value="New route" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let modal = document.querySelector("#editModal");
+    let oldRoute = document.querySelector("#oldRoute");
+    let newRoute = document.querySelector("#newRoute");
+    let routeId = document.querySelector("#routeId");
+    function openModal(id, name) {
+        routeId.value = id;
+        oldRoute.value = name;
+        newRoute.value = name;
+        modal.focus();
+    }
+</script>

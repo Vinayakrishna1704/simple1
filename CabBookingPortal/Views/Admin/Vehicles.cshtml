@@ -1,0 +1,133 @@
+﻿@model List<Vehicle>
+@{
+    ViewData["Title"] = "Admin - Vehicles";
+}
+
+<ul class="nav justify-content-start">
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Admin" asp-action="Approval">Approve Requests</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Admin" asp-action="AssignDriver">Assign Driver</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Admin" asp-action="Vehicles">Vehicles</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Admin" asp-action="Routes">Routes</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Admin" asp-action="Report">Report</a>
+    </li>
+</ul>
+
+<div class="text-center">
+    <h1 class="display-4">Manage Vehicles</h1>
+</div>
+
+<table class="table table-bordered table-striped">
+    <tr>
+        <th>Vehicle ID</th>
+        <th>Shift</th>
+        <th>Vehicle Number</th>
+        <th>Vehicle Route</th>
+        <th>Max Capacity</th>
+        <th>Edit/Delete Vehicle</th>
+    </tr>
+    @foreach (var vehicle in Model)
+    {
+        <tr>
+            <td>@vehicle.VehicleId</td>
+            <td>@((ViewData["shifts"] as Dictionary<int, string>)![vehicle.ShiftId ?? 0])</td>
+            <td>@vehicle.VehicleNumber</td>
+            @if (vehicle.RouteName is null)
+            {
+                <td>Unassigned</td>
+            } else
+            {
+                <td>@((ViewData["routes"] as Dictionary<int, string>)![vehicle.RouteName ?? 0])</td>
+            }
+            <td>@vehicle.MaxCapacity</td>
+            <td>
+                <button class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editModal"
+                        onclick="openModal('@vehicle.VehicleId', '@vehicle.VehicleNumber','@vehicle.MaxCapacity', '@vehicle.ShiftId')">
+                    Edit
+                </button>
+                <a class="btn btn-danger col-auto" asp-controller="Admin" asp-action="DeleteVehicle" asp-route-id=@vehicle.VehicleId>Delete</a>
+            </td>
+        </tr>
+    }
+</table>
+
+<form class="row g-2" method="post" asp-controller="Admin" asp-action="Vehicles">
+    <div class="col-auto">
+        <input type="text" class="form-control" name="vehicleNumber" placeholder="Vehicle Number">
+    </div>
+    <div class="col-auto">
+        <input type="number" class="form-control" name="maxCapacity" placeholder="Maximum Capacity">
+    </div>
+    <div class="col-auto">
+        <select class="form-select" name="shiftId">
+            <option value="1">Indian</option>
+            <option value="2" selected>UK</option>
+            <option value="3">US</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary mb-3">Add Vehicle</button>
+    </div>
+</form>
+
+
+
+<div id="editModal" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Route</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-controller="Admin" asp-action="UpdateVehicles" method="get">
+                    <div class="visually-hidden">
+                        <input type="number" id="vehicleId" name="vehicleId" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="newVehicleNumber">New Vehicle Number</label>
+                        <input type="text" id="newVehicleNumber" name="newVehicleNumber" class="form-control" value=" " />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="newVehicleCapacity">New Vehicle Capacity</label>
+                        <input type="number" min="0" id="newVehicleCapacity" name="newVehicleCapacity" class="form-control" value="" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="shiftId">Shift</label>
+                        <select class="form-select" name="shiftId">
+                            <option value="1">Indian</option>
+                            <option value="2" selected>UK</option>
+                            <option value="3">US</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let modal = document.querySelector("#editModal");
+    let vehicleId = document.querySelector("#vehicleId");
+    let newVehicleNumber = document.querySelector("#newVehicleNumber");
+    let newVehicleCapacity = document.querySelector("#newVehicleCapacity");
+
+    function openModal(id, number,capacity,shiftId) {
+        vehicleId.value = id;
+        newVehicleNumber.value = number;
+        newVehicleCapacity.value = capacity;
+        modal.focus();
+    }
+</script>

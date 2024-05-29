@@ -1,0 +1,157 @@
+﻿@model CabBookingPortal.ViewModels.MultipleViewModel
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Your Requests</h1>
+</div>
+    @* <form class="mt-3 row g-3 align-items-center justify-content-end" method="get" action="@Url.Action("Index", "Home")"> *@
+
+@if (Model.Employees.Any() && Model!=null)
+{
+    var firstEmployee = Model.Employees.First();
+    var firstShift = Model.Shiftss.First();
+
+    <div class="m-auto w-75">
+        <form class="row g-3">
+            <div class="col-md-6">
+                <label for="employeeName" class="form-label">Employee name</label>
+                <input type="text" class="form-control" name="employeeName" value="@firstEmployee.Username" disabled />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="departmentName">Department</label>
+                <input type="text" class="form-control" name="departmentName" value="@firstEmployee.Department" disabled />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="shiftDetails">Shift Details</label>
+                <input type="text" class="form-control" name="shiftDetails" value="@firstShift.ShiftName" disabled />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="timeIn">Time In</label>
+                <input type="text" class="form-control" name="timeIn" value="@firstShift.ShiftIn" disabled />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="costCenter">Cost Center</label>
+                <input type="text" class="form-control" name="costCenter" value="@firstEmployee.CostCode" disabled />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="timeOut">Time Out</label>
+                <input type="text" class="form-control" name="timeOut" value="@firstShift.ShiftOut" disabled />
+            </div>
+            <div class="col-md-12">
+                <a class="btn btn-primary" asp-controller="Home" asp-action="CreateRequests">Create Request</a>
+                <a class="btn btn-primary" asp-controller="Home" asp-action="EditRequests">Edit Request</a>
+            </div>
+        </form>
+    </div>
+    @* action="@Url.Action("Index", "Home") *@
+
+    <form class="mt-3 row g-3 align-items-center justify-content-end" method="get" >
+        <div class="col-auto">
+            <label class="col-form-label" for="fromDate">From Date</label>
+        </div>
+        <div class="col-auto">
+            <input type="date" id="fromDate" class="form-control" name="fromDate"   />
+        </div>
+        <div class="col-auto">
+            <label class="col-form-label" for="toDate">To Date</label>
+        </div>
+        <div class="col-auto">
+            <input type="date" id="toDate" class="form-control" name="toDate" />
+        </div>
+        <div class="col-auto">
+            <button type="submit"  class="btn btn-primary">Retrieve</button>
+        </div>
+    </form>
+
+    <table class="mt-3 table table-bordered table-striped text-center">
+        <thead>
+            <tr>
+                
+                <th colspan="2">Travel Dates</th>
+                <th rowspan="2">Request Type</th>
+                <th rowspan="2">Status</th>
+                <th colspan="2">Cab Details</th>
+                <th rowspan="2">Route</th>
+                
+            </tr>
+            <tr>
+                <td>Date</td>
+                <td>Day</td>
+                <th >Vehicle Number</th>
+                <th >Driver Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < Model.Requestss.Count; i++)
+            {
+                <tr>
+                    <td id="date">@Model.Requestss[i].BookingDate</td>
+                    <td >@Model.Requestss[i].BookingDate.ToString("dddd")</td>
+                    <td>@(Model.Requestss[i].IsPickup == true ? "Pickup" : "Drop")</td>
+                    <td>@Model.RequestStatusess[i]?.StatusName</td>
+                    <td>@Model.Vehicless[i]?.VehicleNumber</td>
+                    <td>@Model.Driverss[i]?.DriverName</td>
+                    <td>@Model.Routes[i]?.RouteName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="m-auto w-75">
+        <form class="row g-3">
+            <div class="col-md-6">
+                <label for="employeeName" class="form-label">Employee name</label>
+                <input type="text" class="form-control" name="employeeName" value="@Model.Employee.Username" disabled />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="departmentName">Department</label>
+                <input type="text" class="form-control" name="departmentName" value="@Model.Employee.Department" disabled />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="shiftDetails">Shift Details</label>
+                <input type="text" class="form-control" name="shiftDetails" value="@Model.Shift.ShiftName" disabled />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="timeIn">Time In</label>
+                <input type="text" class="form-control" name="timeIn" value="@Model.Shift.ShiftIn" disabled />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="costCenter">Cost Center</label>
+                <input type="text" class="form-control" name="costCenter" value="@Model.Employee.CostCode" disabled />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="timeOut">Time Out</label>
+                <input type="text" class="form-control" name="timeOut" value="@Model.Shift.ShiftOut" disabled />
+            </div>
+            <div class="col-md-12">
+                <a class="btn btn-primary" asp-controller="Home" asp-action="CreateRequests">Create Request</a>
+                <a class="btn btn-primary" asp-controller="Home" asp-action="EditRequests">Edit Request</a>
+            </div>
+        </form>
+    </div>
+    <form class="mt-3 row g-3 align-items-center justify-content-end">
+        <div class="col-auto">
+            <label class="col-form-label" for="fromDate">From Date</label>
+        </div>
+        <div class="col-auto">
+            <input type="date" id="fromDate" class="form-control" name="@Context.Request.Query["fromDate"]" />
+        </div>
+        <div class="col-auto">
+            <label class="col-form-label" for="toDate">To Date</label>
+        </div>
+        <div class="col-auto">
+            <input type="date" class="form-control" name="@Context.Request.Query["toDate"]" />
+        </div>
+        <div class="col-auto">
+            <button type="submit"  class="btn btn-primary">Retrieve</button>
+        </div>
+    </form>
+    
+}
+
+

@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Admin - Report";
+}
+
+<ul class="nav justify-content-start">
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Admin" asp-action="Approval">Approve Requests</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Admin" asp-action="AssignDriver">Assign Driver</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Admin" asp-action="Vehicles">Vehicles</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Admin" asp-action="Routes">Routes</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Admin" asp-action="Report">Report</a>
+    </li>
+</ul>
+
+<div class="text-center">
+    <h1 class="display-4">Report</h1>
+</div>
+
+<div class="shadow-sm p-3 rounded w-50 m-auto">
+    <form class="g-3" asp-controller="Admin" asp-action="GetReport" method="get">
+        <div class="mb-3">
+            <label for="department" class="form-label">Department:</label>
+            <input type="text" id="department" class="form-control" name="department" placeholder="Enter department">
+        </div>
+        <div class="mb-3">
+            <label for="fromDate" class="form-label">From Date:</label>
+            <input type="date" name="fromDate" id="fromDate" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="toDate">To Date:</label>
+            <input type="date" name="toDate" id="toDate" class="form-control">
+        </div>
+        <button class="btn btn-primary" onclick="exportToCSV()">Export to CSV</button>
+    </form>
+</div>
+
+<div>
+
+</div>

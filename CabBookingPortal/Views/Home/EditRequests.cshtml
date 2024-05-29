@@ -1,0 +1,82 @@
+﻿@{
+    ViewData["Title"] = "Create Request";
+    string[] daysOfWeek = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+    int weekNumber = System.Globalization.ISOWeek.GetWeekOfYear(DateTime.Today);
+    int weekYear = System.Globalization.ISOWeek.GetYear(DateTime.Today);
+    string minWeek = $"{weekYear}-W{weekNumber}";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Edit Requests</h1>
+</div>
+
+<form>
+    <div class="mb-4">
+        <label class="form-label" for="requestDate">Request Date</label>
+        <input class="form-control w-auto" type="text" name="requestDate" value="@DateTime.Now.ToShortDateString()" disabled />
+    </div>
+    <div>
+        <label class="form-label" for="selectedWeek">Week Selection</label>
+        <input class="form-control w-auto" id="weekSelector" type="week" name="selectedWeek" min="@minWeek" />
+    </div>
+</form>
+<form>
+    <table class="mt-4 table table-striped table-bordered text-center" id="weekTable">
+        <thead>
+            <tr>
+                <th rowspan="2">Date</th>
+                <th rowspan="2">Day</th>
+                <th colspan="4">Request Type</th>
+            </tr>
+            <tr>
+                <th>Pickup</th>
+                <th>Pick Up Location</th>
+                <th>Drop</th>
+                <th>Drop Location</th>
+            </tr>
+        </thead>
+        <tbody id="weekTableBody" class="visually-hidden">
+            @for (int i = 0; i < 7; i++)
+            {
+                <tr>
+                    <td id="@($"date{i}")" name="date"></td>
+                    <td>@daysOfWeek[i]</td>
+                    <td><input class="form-check-input" type="checkbox" name="pickup" checked /></td>
+                    <td><input class="form-control" type="text" name="pickupLocation" value="Default address" /></td>
+                    <td><input class="form-check-input" type="checkbox" name="drop" checked /></td>
+                    <td><input class="form-control" type="text" name="" value="Default address" /></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="button" class="btn btn-secondary">Back</button>
+</form>
+
+<script>
+    function getDateOfWeek(w, y) {
+        var d = (1 + (w - 1) * 7); // 1st of January + 7 days for each week
+        return new Date(y, 0, d);
+    }
+
+    let tableBody = document.querySelector("#weekTableBody");
+
+    function fillTableWithDates(startDate) {
+        for (let i = 0; i < 7; i++) {
+            let row = document.querySelector("#date" + i);
+            let newDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + i);
+            row.textContent = `${newDate.getDate()}/${newDate.getMonth()}/${newDate.getFullYear()}`;
+        }
+    }
+
+    let startDate = "";
+
+    const weekSelector = document.querySelector("#weekSelector");
+    weekSelector.addEventListener("input", e => {
+        let year = e.target.value.split("-")[0];
+        let week = e.target.value.split("-")[1].slice(1);
+        startDate = getDateOfWeek(week, year);
+        fillTableWithDates(startDate);
+        tableBody.classList.remove("visually-hidden");
+    });
+</script>

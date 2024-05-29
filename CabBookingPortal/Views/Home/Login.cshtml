@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="d-flex flex-column justify-content-center align-items-center vh-100">
+    <img src="/eq_logo.png" class="mb-2" height="70px" width="70px" />
+    <p class="fs-3">Please Login</p>
+    <form class="w-25" method="post" asp-controller="Home" asp-action="Login">
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" name="empId" placeholder="Employee Number" required>
+            <label for="empId" class="form-label">Employee Number</label>
+        </div>
+        <div class="mb-3 form-floating">
+            <input type="password" class="form-control" name="password" placeholder="Password" required>
+            <label for="password" class="form-label">Password</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+</div>
